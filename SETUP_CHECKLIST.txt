@@ -1,0 +1,299 @@
+================================================================================
+APPLIANCE RAG - FAANG-WORTHY SETUP CHECKLIST
+================================================================================
+
+Project: Production-grade RAG system for appliance troubleshooting with web scraping
+Tech Stack: FastAPI, PostgreSQL+pgvector, Redis, Scrapy, Docker, Celery
+
+================================================================================
+1. CORE INFRASTRUCTURE SETUP
+================================================================================
+☐ GitHub Actions CI/CD - Automated testing, linting, building, deployment
+☐ Pre-commit hooks - Code quality (black, ruff, mypy)
+☐ .gitignore - Proper exclusions for Python, Docker, IDEs
+☐ Makefile - Common commands (setup, test, lint, run, docker-up)
+
+================================================================================
+2. DATABASE SETUP
+================================================================================
+☐ Alembic migrations - Database version control
+☐ Database models - SQLAlchemy ORM models:
+    - Chunks table (id, content, embedding, metadata, source)
+    - Queries table (id, query, response, timestamp, feedback)
+    - ScrapedData table (id, url, content, scraped_at, source_type)
+☐ Database initialization script - Create tables, indexes, pgvector extension
+☐ Connection pooling - SQLAlchemy engine config
+
+================================================================================
+3. TESTING & QUALITY
+================================================================================
+☐ pytest setup - Unit tests, integration tests, fixtures
+☐ Test coverage - Aim for >80% (pytest-cov)
+☐ Load testing - locust or k6 for API performance testing
+☐ Type hints - Add throughout codebase, configure mypy
+☐ Code formatting - black, ruff (in pre-commit hooks)
+
+================================================================================
+4. OBSERVABILITY & MONITORING
+================================================================================
+☐ Structured logging - Use loguru or structlog
+☐ Prometheus metrics:
+    - API latency (histogram)
+    - Scraping success rate (counter)
+    - Embedding generation time (histogram)
+    - Vector search latency (histogram)
+    - Active connections (gauge)
+☐ Health check endpoint - Check:
+    - Database connectivity
+    - Redis connectivity
+    - Model loading status
+    - Disk space
+☐ Sentry integration - Error tracking and alerting
+☐ Grafana dashboards - Visualize metrics
+
+================================================================================
+5. SECURITY
+================================================================================
+☐ API authentication - JWT tokens or API keys
+☐ Rate limiting - Prevent abuse (slowapi or FastAPI middleware)
+☐ Input validation - Pydantic schemas for ALL endpoints
+☐ Environment secrets - Use secrets management (AWS Secrets, Vault)
+☐ HTTPS/TLS - Production deployments only
+☐ SQL injection protection - Use ORM, parameterized queries
+☐ CORS configuration - Restrict origins in production
+
+================================================================================
+6. DOCUMENTATION
+================================================================================
+☐ README.md:
+    - Architecture diagram
+    - Setup instructions
+    - API examples with curl commands
+    - Environment variable documentation
+    - Docker setup guide
+☐ API documentation - FastAPI auto-docs + manual examples
+☐ Architecture Decision Records (ADRs) - Document key technical decisions
+☐ CONTRIBUTING.md - Guidelines for contributors
+☐ CHANGELOG.md - Version history
+
+================================================================================
+7. SCRAPY SPIDER SETUP
+================================================================================
+☐ scrapy.cfg - Scrapy project configuration
+☐ spiders/ - Individual spiders for each site:
+    - RepairClinicSpider
+    - ManufacturerSupportSpider (Samsung, LG, Whirlpool, GE)
+    - RedditApplianceRepairSpider
+    - YouTubeTranscriptSpider
+☐ pipelines.py:
+    - Data cleaning pipeline
+    - Deduplication pipeline
+    - MongoDB storage pipeline
+    - Embedding generation pipeline
+☐ middlewares.py:
+    - User-agent rotation
+    - Proxy rotation (ScraperAPI/Bright Data)
+    - Retry logic with exponential backoff
+    - Rate limiting per domain
+☐ items.py - Structured data models (ApplianceIssue, Solution, Part)
+
+================================================================================
+8. VECTOR DATABASE INTEGRATION
+================================================================================
+☐ Replace raw FAISS with production vector DB:
+    Option A: Pinecone (managed, easiest)
+    Option B: Qdrant (self-hosted, fast)
+    Option C: Weaviate (hybrid search, GraphQL)
+    Option D: ChromaDB (good for development)
+☐ Batch embedding upserts - Process in chunks of 100-1000
+☐ Metadata filtering - Filter by appliance type, issue category
+☐ Hybrid search - Combine semantic + keyword search
+☐ Index optimization - Choose right index type (HNSW recommended)
+
+================================================================================
+9. DEPLOYMENT PREPARATION
+================================================================================
+☐ Kubernetes manifests (if deploying to K8s):
+    - Deployment yamls
+    - Service definitions
+    - ConfigMaps
+    - Secrets
+    - Ingress rules
+☐ Terraform/IaC - Infrastructure as code for cloud resources
+☐ Environment configs - Separate for dev/staging/prod
+☐ Monitoring dashboards - Grafana dashboard JSON exports
+☐ Backup strategy:
+    - Automated PostgreSQL backups
+    - Vector store snapshots
+    - S3 backup storage
+☐ Disaster recovery plan - Document recovery procedures
+☐ Scaling strategy - Horizontal pod autoscaling, load balancing
+
+================================================================================
+10. ADVANCED FEATURES
+================================================================================
+☐ Query analytics - Track what users search for, popular queries
+☐ Feedback loop - Users rate answer quality (thumbs up/down)
+☐ A/B testing framework - Test different:
+    - Embedding models
+    - Chunk sizes
+    - Retrieval strategies
+    - LLM prompts
+☐ Caching strategy:
+    - Cache popular queries in Redis (TTL: 1 hour)
+    - Cache embeddings for common queries
+    - CDN for static assets
+☐ Auto-retraining - Periodically re-scrape and update embeddings
+☐ Multi-language support - Translate queries and responses
+☐ Voice input - Speech-to-text integration
+☐ Image recognition - Upload photos of error codes/issues
+
+================================================================================
+QUICK PRIORITY LIST
+================================================================================
+
+HIGH PRIORITY (Do Now - Week 1):
+1. ☐ Create .gitignore
+2. ☐ Set up GitHub Actions for CI/CD (test, lint, build)
+3. ☐ Add health check endpoint (/health)
+4. ☐ Create comprehensive README with setup instructions
+5. ☐ Initialize Alembic for database migrations
+
+MEDIUM PRIORITY (Week 2-3):
+6. ☐ Pytest setup with initial tests (>50% coverage)
+7. ☐ Create database models and migrations
+8. ☐ Implement structured logging (loguru)
+9. ☐ Add API authentication (JWT)
+10. ☐ Create first Scrapy spider (RepairClinic)
+
+LOWER PRIORITY (After MVP):
+11. ☐ Monitoring/observability setup (Prometheus + Grafana)
+12. ☐ Load testing with locust
+13. ☐ Advanced caching with Redis
+14. ☐ Production deployment scripts
+15. ☐ Replace FAISS with production vector DB
+
+================================================================================
+WEB SCRAPING TARGET SITES
+================================================================================
+
+Manufacturer Sites:
+- Samsung Support: https://www.samsung.com/us/support/
+- LG Support: https://www.lg.com/us/support
+- Whirlpool Support: https://www.whirlpool.com/services/repair-parts.html
+- GE Appliances: https://www.geappliances.com/appliance/service-and-support
+
+Repair Sites:
+- RepairClinic: https://www.repairclinic.com/
+- AppliancePartsPros: https://www.appliancepartspros.com/
+- PartSelect: https://www.partselect.com/
+
+Community Sites:
+- Reddit: r/appliancerepair
+- DIY Forums: https://www.diychatroom.com/
+- YouTube: Repair videos and transcripts
+
+================================================================================
+RECOMMENDED TECH STACK UPGRADES
+================================================================================
+
+Current Embedding Model: all-MiniLM-L6-v2 (384 dims)
+Better Options:
+  - all-mpnet-base-v2 (768 dims, better quality)
+  - OpenAI ada-002 (1536 dims, highest quality)
+  - Cohere embeddings (production-grade)
+
+Current Vector Store: Raw FAISS
+Production Options:
+  - Pinecone (managed, $70/month starter)
+  - Qdrant (self-hosted, free)
+  - Weaviate (hybrid search)
+
+Current LLM: None (only retrieval)
+Recommended:
+  - Cloudflare Workers AI (fast, edge-deployed)
+  - OpenAI GPT-4 (highest quality)
+  - Anthropic Claude (best for instructions)
+  - Ollama (local development)
+
+================================================================================
+FAANG INTERVIEW TALKING POINTS
+================================================================================
+
+1. Scalability:
+   - Horizontal scaling with Docker + K8s
+   - Async scraping with Scrapy + Celery
+   - Connection pooling for databases
+   - Caching layer with Redis
+
+2. Reliability:
+   - Health checks and monitoring
+   - Retry logic with exponential backoff
+   - Database migrations (Alembic)
+   - Automated backups
+
+3. Performance:
+   - Vector search optimizations (HNSW index)
+   - Query result caching
+   - Batch embedding generation
+   - Load balancing
+
+4. Code Quality:
+   - Type hints throughout
+   - >80% test coverage
+   - CI/CD pipeline
+   - Pre-commit hooks
+
+5. Observability:
+   - Structured logging
+   - Prometheus metrics
+   - Distributed tracing
+   - Error tracking (Sentry)
+
+6. Security:
+   - API authentication
+   - Rate limiting
+   - Input validation
+   - Secrets management
+
+================================================================================
+USEFUL COMMANDS
+================================================================================
+
+# Docker
+docker-compose up -d                    # Start all services
+docker-compose down                     # Stop all services
+docker-compose logs -f api              # View API logs
+docker-compose exec postgres psql       # Access PostgreSQL
+
+# Database
+alembic revision --autogenerate -m "message"  # Create migration
+alembic upgrade head                          # Apply migrations
+alembic downgrade -1                          # Rollback one migration
+
+# Testing
+pytest                                  # Run all tests
+pytest --cov=app --cov-report=html     # Run with coverage
+pytest -v -s                           # Verbose output
+
+# Code Quality
+black .                                # Format code
+ruff check .                           # Lint code
+mypy app/                              # Type checking
+
+# Scrapy
+scrapy crawl repair_clinic             # Run spider
+scrapy list                            # List all spiders
+scrapy shell "https://example.com"     # Interactive shell
+
+# Celery
+celery -A app.tasks worker --loglevel=info    # Start worker
+celery -A app.tasks beat --loglevel=info      # Start scheduler
+celery -A app.tasks flower                    # Open monitoring UI
+
+================================================================================
+END OF CHECKLIST
+================================================================================
+
+Last Updated: 2025-10-12
+Project Repository: https://github.com/112Hunter112/CloudFareAI.git

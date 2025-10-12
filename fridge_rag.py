@@ -4,36 +4,38 @@ from sentence_transformers import SentenceTransformer
 import ollama
 import faiss
 import numpy as np
+from transformers import AutoTokenizer
+from langchain.text_splitter import RecursiveCharacterTextSplitter
 
 def pdf_chucnker(pdf_name, chunk_size = 500, overlap = 100) :
 
-    reader = PdfReader(pdf_name, strict=True)
+    reader = PdfReader(pdf_name, strict=True) # reads file
     pages = reader.pages # this is an obj
-    print(len(pages))
+    print(len(pages)) # prints the pages in the file
 
 
     full_text = ""
     for i , page in enumerate(pages,start=1):
-
         print(f"Page number {i} ")
         text = page.extract_text()
-
+        if "Refrigerators" in text and len(text.strip()) < 2000:
+            continue
         full_text += text + "\n"
+
 
     print(f"Total characters: {len(full_text)}")
 
     chunks = []
-    start = 0
-    while start < len(full_text):
-        end = start + chunk_size
-        chunks.append(full_text[start:end])
-        start += chunk_size - overlap
+    text_splitter = RecursiveCharacterTextSplitter.from_tiktoken_encoder(
+        encoding_name="cl100k_base",
+        chunk_size=chunk_size,  # tokens per chunk
+        chunk_overlap=overlap,  # overlap tokens
+        separators=["\n\n", "\n", ". ", " ", ""]  # tries these in order
+    )
+
+    chunks = text_splitter.split_text(full_text)
 
     print(f"Total chunks: {len(chunks)}")
-
-    for i, chunk in enumerate(chunks[:3]):  # First 3 chunks
-        print(f"\n--- CHUNK {i} ---")
-        print(chunk[:200])  # First 200 chars
 
 
     return chunks
@@ -66,6 +68,10 @@ def retrieve_chunks(query, index, chunks, model, top_k=3):
 
     # Search in FAISS index
     distances, indices = index.search(query_emb, top_k)
+
+
+    print("Distances:", distances)
+    print("Indices:", indices)
 
     # Retrieve actual chunk text
     results = [chunks[i] for i in indices[0]]
