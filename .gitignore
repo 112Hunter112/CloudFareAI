@@ -10,6 +10,8 @@ venv/
 env/
 ENV/
 .venv/
+venv_langchain/
+venv_ollama/
 
 # Environment variables - CRITICAL: Never commit these!
 .env
@@ -62,6 +64,16 @@ data/raw/*
 data/processed/*
 *.csv
 *.parquet
+
+# RAG Generated Files (auto-generated, don't commit)
+chunks.json
+embeddings.npy
+faiss_index.bin
+retrieved_chunks.json
+answer.txt
+
+# Keep the PDF manual
+!fridge-owners-manual.pdf
 
 # Jupyter Notebook
 .ipynb_checkpoints

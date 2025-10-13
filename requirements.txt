@@ -1,57 +1,60 @@
-# Core RAG Dependencies
-sentence-transformers==2.3.1
-faiss-cpu==1.7.4
-numpy==1.24.3
-pypdf==4.0.1
+# Core RAG Dependencies (Used by fridge_rag.py)
+# Note: This uses pydantic v1 for langchain compatibility
+sentence-transformers
+faiss-cpu
+pypdf
+langchain==0.1.20
+pydantic<2.0
+tiktoken
+numpy<2
 
-# LLM & Embeddings
-openai==1.12.0
-anthropic==0.18.1
-langchain==0.1.9
-langchain-community==0.0.24
-chromadb==0.4.22
+# LLM & Embeddings (Not used - commented out)
+# openai==1.12.0
+# anthropic==0.18.1
+# langchain-community==0.0.24
+# chromadb==0.4.22
 
-# Web Framework
-fastapi==0.109.2
-uvicorn[standard]==0.27.1
-pydantic==2.6.1
-pydantic-settings==2.1.0
+# Web Framework (Not used - commented out)
+# fastapi==0.109.2
+# uvicorn[standard]==0.27.1
+# pydantic==2.6.1
+# pydantic-settings==2.1.0
 
-# Web Scraping
-scrapy==2.11.1
-scrapy-playwright==0.0.34
-playwright==1.41.2
-beautifulsoup4==4.12.3
-lxml==5.1.0
-httpx==0.26.0
+# Web Scraping (Not used - commented out)
+# scrapy==2.11.1
+# scrapy-playwright==0.0.34
+# playwright==1.41.2
+# beautifulsoup4==4.12.3
+# lxml==5.1.0
+# httpx==0.26.0  # Conflicts with ollama's httpx requirement
 
-# Database
-psycopg2-binary==2.9.9
-sqlalchemy==2.0.27
-alembic==1.13.1
-redis==5.0.1
+# Database (Not used - commented out)
+# psycopg2-binary==2.9.9
+# sqlalchemy==2.0.27
+# alembic==1.13.1
+# redis==5.0.1
 
-# Background Tasks
-celery==5.3.6
-celery[redis]==5.3.6
+# Background Tasks (Not used - commented out)
+# celery==5.3.6
+# celery[redis]==5.3.6
 
-# Monitoring & Logging
-loguru==0.7.2
-prometheus-client==0.19.0
-sentry-sdk==1.40.5
+# Monitoring & Logging (Not used - commented out)
+# loguru==0.7.2
+# prometheus-client==0.19.0
+# sentry-sdk==1.40.5
 
-# Utils
-python-dotenv==1.0.1
-python-multipart==0.0.9
-pydantic-settings==2.1.0
-tenacity==8.2.3
+# Utils (Not used - commented out)
+# python-dotenv==1.0.1
+# python-multipart==0.0.9
+# pydantic-settings==2.1.0
+# tenacity==8.2.3
 
-# Development
-pytest==8.0.0
-pytest-asyncio==0.23.5
-black==24.2.0
-ruff==0.2.2
-mypy==1.8.0
+# Development (Not used - commented out)
+# pytest==8.0.0
+# pytest-asyncio==0.23.5
+# black==24.2.0
+# ruff==0.2.2
+# mypy==1.8.0
 
 # Optional: Vector Databases
 # pinecone-client==3.0.3
