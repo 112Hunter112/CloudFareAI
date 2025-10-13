@@ -1,0 +1,8 @@
+# Requirements for venv_langchain (Pydantic v1)
+sentence-transformers
+faiss-cpu
+pypdf
+langchain==0.1.20
+pydantic<2.0
+tiktoken
+numpy<2
